@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         GitHub file tree resizer
+// @name         GitHub beta tree fix
 // @version      0.1
 // @description  Make the GitHub beta file tree resizable
 // @author       bepa01
@@ -13,11 +13,20 @@
 
     // Create the draggable part
     var styleElem = document.head.appendChild(document.createElement("style"));
-    styleElem.innerHTML = ".Layout-sidebar>div::after { content: ''; position: absolute; left: calc(100% - 10px); top: 0; width: 10px; height: 100%; cursor: ew-resize;}";
+    styleElem.innerHTML = `
+        .Layout-sidebar>div::after { 
+            content: ''; 
+            position: absolute; 
+            left: calc(100% - 10px); 
+            top: 0; width: 10px; 
+            height: 100%; 
+            cursor: ew-resize;
+        }
+    `;
 
     // Cache element references
-    var target = document.getElementsByClassName('Layout-sidebar')[0].children[0];
     var layout = document.querySelector('.Layout');
+    var target = document.querySelector(".Layout-sidebar>div");
 
     // Reload saved width, if any
     var savedWidth = localStorage.getItem("sidebar-width");
@@ -36,8 +45,8 @@
         layout.style.setProperty('--Layout-sidebar-width', width + "px");
     }
 
-    target.addEventListener("mousedown", function(e){
-        startingMousePosition = e.x;
+    target.addEventListener("mousedown", function(mouseEvent){
+        startingMousePosition = mouseEvent.x;
         document.addEventListener("mousemove", resize, false);
     }, false);
 
